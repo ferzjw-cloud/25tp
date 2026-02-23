@@ -1,19 +1,20 @@
-import { useState } from "react"
-import { users } from "../services/mockApi.js"
+import { useEffect, useState } from "react"
+// import { users } from "../services/mockApi.js"
 
 const Aside = () => {
   const [search, setSearch] = useState("")
+  const [users, setUsers] = useState([])
 
   const fetchingData = async () => {
     try {
       const response = await fetch("https://dummyjson.com/users")
 
       if (!response.ok) {
-        alert("No se encuentra")
+        alert("No se encuentra lo que pedis :(")
         return
       }
 
-   const data = await response.json()
+      const data = await response.json()
 
       setUsers(data.users)
     } catch (error) {
@@ -34,13 +35,19 @@ const Aside = () => {
   return (
     <aside>
       <h1>Chat UTN</h1>
-      <input type="search" placeholder="Buscar contactos..." onChange={handleChange} />
+      <input className="search" type="search" placeholder="Buscar contactos..." onChange={handleChange} />
+      {
+        filteredUsers.length === 0 && <p className="not-found-text">No se encontraron contactos</p>
+      }
       <ul>
         {
           filteredUsers.map((user) => (
-            <li>
-              {user.name}
-              <small>{user.status}</small>
+            <li key={user.id}>
+              <img src={user.image} alt="" />
+              <div>
+                {user.firstName} {user.lastName}
+                <small>{user.address.country}</small>
+              </div>
             </li>
           ))
         }
